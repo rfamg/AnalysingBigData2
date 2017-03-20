@@ -106,7 +106,7 @@ View(cv)
 corrplot(cv, method= "ellipse", type="lower" )
 
 list <- as.matrix(cor(cv)) # creating a list of the correlations
-list_cor <- arrange(melt(list), -abs(value)) # showing the most highly correlated in a list.
+list_cor <- arrange(melt(list)) # showing the most highly correlated in a list.
 
 list_cor
 

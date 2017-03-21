@@ -105,8 +105,8 @@ cv <- cor(train_cor, method="pearson")# View Correlation as a matrix
 View(cv)
 corrplot(cv, method= "ellipse", type="lower" )
 
-list <- as.matrix(cor(cv)) # creating a list of the correlations
-list_cor <- arrange(melt(list), desc) # showing the most highly correlated in a list.
+list <- as.matrix(cor(train)) # creating a list of the correlations
+list_cor <- arrange(melt(list)) # showing the most highly correlated in a list.
 
 list_cor
 

@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------------
 #---------------------------------------------------------------------------
 #  Red Wine
-#  Written by Rafael Guimaraees
+#  Written by Rafael Guimaraes,Hanna (Huong) Nguyen,  Yuanxi Yao and Yilan Tang
 #  Date March 20th 2017
 #  Version 1.0
 #  ---------------------------------------------------------------------------
@@ -62,7 +62,7 @@ head(test)
 #  ---------------------------------------------------------------------------
 
 
-View(basicStats(train)[c("Minimum", "1. Quartile", "Median", "3. Quartile", "Maximum"),])
+  View(basicStats(train)[c("Minimum", "1. Quartile", "Median", "3. Quartile", "Maximum"),])
 
 
 #  ---------------------------------------------------------------------------
@@ -108,7 +108,7 @@ corrplot(cv, method= "ellipse", type="lower" )
 list <- as.matrix(cor(cv)) # creating a list of the correlations
 list_cor <- arrange(melt(list)) # showing the most highly correlated in a list.
 
-list_cor
+View(list_cor)
 
 corrgram(cv) # Plot the correlation as a matrix.
 

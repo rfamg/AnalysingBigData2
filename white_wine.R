@@ -1,7 +1,7 @@
 #---------------------------------------------------------------------------
 #---------------------------------------------------------------------------
 #  White Wine
-#  Written by Rafael Guimaraees
+#  Written by Rafael Guimaraes,Hanna (Huong) Nguyen, Yuanxi Yao and Yilan Tang
 #  Date March 20th 2017
 #  Version 1.0
 #  ---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ setnames(train_cor, old = c("train..fixed.acidity.","train..volatile.acidity.", 
                             "train.alcohol", "train.quality" ), 
          new = c("fixed.acidity.","volatile.acidity.", "citric.acid.",        
                  "residual.sugar.", "chlorides","free.sulfur.dioxide.",
-                 "density", "pH", "sulphates",        
+                 "density",  "pH", "sulphates",        
                  "alcohol", "quality" ))
 
 

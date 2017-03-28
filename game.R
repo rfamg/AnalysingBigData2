@@ -55,7 +55,7 @@ z <- summary(train)$coefficients/summary(train)$standard.errors
 p <- (1 - pnorm(abs(z), 0, 1)) * 2
 p
 
-t.test(df.train$RED.H, df.train$RED.A)
+s
 
 #Exponentiate
 exp(coef(train))

@@ -1,0 +1,21 @@
+Match Num,Match_btw,HTGD,RED_H,RED_A,POINTS_H,POINTS_A,TOTAL_H_P,TOTAL_A_P,FGS-0,FGS-1,MATCH_O
+1,Swansea City vs. Everton,-2,0,0,7,7,47,56,1,0,Loss
+2,Chelsea vs. Stoke City,0,0,0,10,4,64,45,0,0,Win
+3,Southampton vs. Aston Villa,-1,0,0,0,4,0,38,1,0,Win
+4,West Bromich Albion vs. Reading,0,0,0,7,1,47,0,0,0,Win
+5,West Ham United vs. Sunderland,-1,0,0,7,3,0,45,1,0,Draw
+6,Wigan Athletic vs. Fulham,-1,0,0,4,6,43,52,1,0,Loss
+7,Liverpool vs. Manchester United,0,1,0,2,9,52,89,0,0,Loss
+8,Newcastle United vs. Norwich City,1,0,0,5,3,65,47,0,1,Win
+9,Manchester City vs. Arsenal,1,0,0,8,8,89,70,0,1,Draw
+10,Tottenham Hotspur vs. Queens Park Rangers,-1,0,0,5,2,69,37,1,0,Win
+11,Arsenal vs. Chelsea,0,0,0,9,13,70,64,1,0,Loss
+12,Everton vs. Southampton,2,0,0,10,3,56,0,1,0,Win
+13,Fulham vs. Manchester City ,0,0,0,9,9,52,89,0,1,Loss
+14,Norwich City vs. Liverpool,-2,0,0,3,2,47,52,1,0,Loss
+15,Reading vs. Newcastle United,0,0,0,1,8,0,65,0,0,Draw
+16,Stoke City vs. Swansea City,2,0,0,4,7,45,47,0,1,Win
+17,Sunderland vs. Wigan Athletic,0,0,0,4,4,45,43,0,0,Win
+18,Manchester United vs. Tottenham Hotspur,-2,0,0,12,8,89,69,1,0,Loss
+19,Aston Villa vs. West Bromwich Albion,0,0,0,4,10,38,47,0,0,Draw
+20,Queens Park Rangers vs. West Ham United,-2,0,0,2,8,37,0,1,0,Loss

@@ -1,0 +1,48 @@
+---
+title: "Big data 2"
+author: "Rafael Guimaraes"
+date: "3/23/2017"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Level 1 letter
+## Level 2 letter
+
+
+*Read data file
+
+```{r}
+mydata <- read_csv("https://raw.githubusercontent.com/IBSBigData/Big-Data-II-Spring-2017/master/Betting.csv")
+```
+
+*Multinomial Logistic regression
+
+```{r}
+library(nnet)
+mydata$prog2<-relevel(mydata$Match_O, ref="Loss")
+test<-multinom(prog2~HTGD+RED.H+RED.A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+               data=mydata)
+summary(test)
+```
+
+
+*2-tailed z test
+```{r}
+z <- summary(test)$coefficients/summary(test)$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+p
+```
+
+
+ 
+Exponentiate
+
+```{r}
+exp(coef(test))
+```

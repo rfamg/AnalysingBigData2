@@ -70,7 +70,7 @@ print(datactree)
 plot(datactree,type="simple")
 
 #Misclassification error  
-tab<-table(predict(datactree), train$Match_O)
+tab<-table(predict(datactree), df.train$Match_O)
 print(tab)
 1-sum(diag(tab))/sum(tab)
 
@@ -101,9 +101,9 @@ exp(coef(test))
 # First install and invoke party
 
 
-datactree2 <- ctree(MATCH_O~HTGD+RED_H+RED_A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
-                   df.test, controls=ctree_control(mincriterion=0.5, minsplit=20))
-print(datactree2)
+datactree2 <- ctree(Match_O~HTGD+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+                   df.train, controls=ctree_control(mincriterion=0.9, minsplit=50))
+print(datactree2, newdata = df.test)
 plot(datactree2,type="simple")
 
 #Misclassification error  

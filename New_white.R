@@ -144,7 +144,7 @@ fit <- lda(form, data=train,
 pred_lda <- predict(fit, train)$class  # use lda model to predict using orig data
 table(pred_lda)  # tabulate the predictions
 
-tab <- table(pred_lda, train$ANYCHD.2)
+tab <- table(pred_lda, train$quality)
 print(tab)
 #misclassification rate
 1-sum(diag(tab))/sum(tab) 
@@ -160,7 +160,7 @@ summary(svm1)
 # now predict
 pred_svm <- fitted(svm1)
 table(pred_svm)
-tab <- table(pred_svm, train$ANYCHD.2)
+tab <- table(pred_svm, train$quality)
 print(tab)
 #misclassification rate
 1-sum(diag(tab))/sum(tab)  
@@ -172,7 +172,7 @@ print(tab)
 mod_nn <- nnet(form, data = train, size = 2)
 pred_nn <- predict(mod_nn, data=train, type = "class")  
 table(pred_nn)
-tab <- table(pred_nn, train$ANYCHD.2)
+tab <- table(pred_nn, train$quality)
 print(tab)
 #misclassification rate
 1-sum(diag(tab))/sum(tab) 

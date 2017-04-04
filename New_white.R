@@ -93,10 +93,11 @@ names(train)
 
 
 
-form <- as.formula("quality ~ fixed.acidity + volatile.acidity + citric.acid + residual.sugar 
-                   + chlorides + free.sulfur.dioxide + total.sulfur.dioxide + density + pH
-                   +sulphates + alcohol")
+form <- as.formula("quality ~  volatile.acidity + chlorides  + total.sulfur.dioxide + density + alcohol")
 
+
+
+corrgram(train) # Plot the correlation as a matrix.
 
 #  ---------------------------------------------------------------------------
 #  Multinomial regression
@@ -110,9 +111,8 @@ lgpred <- ifelse(mod$fitted.values > 0.5, 1, 0)
 table(lgpred)
 
 
-#  ---------------------------------------------------------------------------
 #  Confusion Matrix
-#  ---------------------------------------------------------------------------
+
 tab <- table(lgpred, train$quality)
 print(tab)
 

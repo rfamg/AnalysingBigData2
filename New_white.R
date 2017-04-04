@@ -136,8 +136,10 @@ print(tab)
 #misclassification rate
 1-sum(diag(tab))/sum(tab)
 
-
+#  ---------------------------------------------------------------------------
 # Linear Discriminant Analysis
+#  ---------------------------------------------------------------------------
+
 fit <- lda(form, data=train,
            na.action="na.omit") 
 

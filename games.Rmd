@@ -1,0 +1,39 @@
+---
+title: "Games Code"
+author: "Rafael Guimaraes, Yilang Tang and Yuanxi Yao"
+date: "3/28/2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+df.train <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/Betting.csv")
+df.test <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/BettingTest.csv", header=T)
+
+```
+
+### Question 1
+
+Write down the equation to predict thw chnce of winning.
+
+```{r cars}
+library(nnet)
+df.train$prog2<-relevel(df.train$Match_O, ref="Loss")
+train<-multinom(prog2~HTGD+RED.H+RED.A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+               data=df.train)
+
+```
+
+```{r echo=FALSE}
+summary(train)
+```
+
+
+### Question 2:  
+According to your model, how do red cards conceded by the Home and Away team influence the outcome of a match. Your response should not be numeric, but qualitative. Based on your understanding of the sport, speculate about possible reasons for these findings.
+
+### Question 3:  
+Under what circumstances is it informative to include points scored by a team in the prior season to predict the outcome of a match?
+
+
+

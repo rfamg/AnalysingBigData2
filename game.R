@@ -55,7 +55,6 @@ z <- summary(train)$coefficients/summary(train)$standard.errors
 p <- (1 - pnorm(abs(z), 0, 1)) * 2
 p
 
-s
 
 #Exponentiate
 exp(coef(train))

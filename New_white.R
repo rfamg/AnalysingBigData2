@@ -165,7 +165,10 @@ print(tab)
 #misclassification rate
 1-sum(diag(tab))/sum(tab)  
 
-# Lastly Neural Net
+#  ---------------------------------------------------------------------------
+#  Neural Net
+#  ---------------------------------------------------------------------------
+
 mod_nn <- nnet(form, data = train, size = 2)
 pred_nn <- predict(mod_nn, data=train, type = "class")  
 table(pred_nn)

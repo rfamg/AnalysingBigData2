@@ -13,13 +13,7 @@
 #  ---------------------------------------------------------------------------
 
 library(fBasics) # Show basic aspect of the data
-library(readr)  # provide additional data-reading functions
-library(corrplot) # attractive correlation graphs
-library(ggplot2) # for plots
-library(data.table)
-library(dplyr)
-library(reshape2)
-library(corrgram)
+
 library(nnet)
 library(party)
 
@@ -74,6 +68,16 @@ print(tab)
 1-sum(diag(tab))/sum(tab)
 
 
+#Number 4
+
+q4<-multinom(prog2~HTGD+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.1, 
+            data=df.train)
+
+summary(q4)
+
+
+coef(q4)[2,2]*3+coef(q4)[2,4]*18+coef(q4)[2,5]*15+coef(q4)[2,6]*39+coef(q4)[2,2]*32
+
 #  ---------------------------------------------------------------------------
 #  test data
 #  ---------------------------------------------------------------------------
@@ -83,7 +87,7 @@ print(tab)
 names(test)
 
 df.test$prog2<-relevel(df.test$MATCH_O, ref="Loss")
-test<-multinom(prog2~HTGD+RED_H+RED_A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+test<-multinom(prog2~HTGD*3+RED_H+RED_A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
                 data=df.test)
 summary(test)
 

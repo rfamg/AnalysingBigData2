@@ -2,10 +2,12 @@
 title: "Games Code"
 author: "Rafael Guimaraes, Yilang Tang and Yuanxi Yao"
 date: "3/28/2017"
-output: html_document
+output:
+  word_document: default
+  html_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r setup, echo=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 df.train <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/Betting.csv")
 df.test <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/BettingTest.csv", header=T)
@@ -16,24 +18,161 @@ df.test <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2
 
 Write down the equation to predict thw chnce of winning.
 
-```{r cars}
+```{r }
 library(nnet)
 df.train$prog2<-relevel(df.train$Match_O, ref="Loss")
 train<-multinom(prog2~HTGD+RED.H+RED.A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
                data=df.train)
 
+z <- summary(train)$coefficients/summary(train)$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+
+
 ```
 
-```{r echo=FALSE}
+Now to read the result:
+```{r}
 summary(train)
 ```
+
 
 
 ### Question 2:  
 According to your model, how do red cards conceded by the Home and Away team influence the outcome of a match. Your response should not be numeric, but qualitative. Based on your understanding of the sport, speculate about possible reasons for these findings.
 
+**Answer:**
+Influence the outcome of a match. Your response should not be numeric, but qualitative. Based on your understanding of the sport, speculate about possible reasons for these findings.
+ A negative coefficient (-0.81) between red cards conceded by Home team and winning probability implies that the number of red cards negatively related to the winning  probability of Home team . it means as the number of red card increases, the winning probability of Home team goes down.
+A positive coefficient (0.983) be between red cards conceded by Away team and winning probability shows that the number of red cards positively related to the winning  probability of Away team, as the number of red card increases, the winning probability of Away team also increases.
+
+
+ positive coefficient between red cards and the draw probability of both teams shows that the more the red cards conceded, the higher chance of drawing for both teams. 
+ 
+
+
+
 ### Question 3:  
 Under what circumstances is it informative to include points scored by a team in the prior season to predict the outcome of a match?
 
+**Answer:**
+According to result of Z test, we got to know that a p value of 0.9598 (p>0.05)in the draw model for Total_H_P means that prior points scored by Home team are not relevant  to the  draw probability of Home team and a  p value of 0.007 (p<0.05)in the win model for Total_H_P are significantly relevant to the winning probability  of Home team.
+While prior points scored by Away team does highly relate to the draw and winning probability(p draw<0.05, P win<0.05) 
+same theory for the relation between the points_H , points_A and the draw an win probability. For Home team, the points earned in the league  highly relevant to the draw and winning probability while for Away team, , the points earned in the league does not relate to  the draw and winning probability at all.
+So when we predict the winning chance of Home team, using the data of points earned in the league and total prior scores would be both informative; while for Away team, it is more informative to use the total prior scores to predict the outcome of the match instead of using points earning in the league.
+
+### Question 4
+Using the multinomial logit model, compute the probability of a home team win for a match with these attributes:
+
+Because of the p-value we removed the red cars variables. Below you can see our multinomial logit model.
+```{r}
+
+
+q4<-multinom(prog2~HTGD+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.1, 
+            data=df.train)
+
+summary(q4)
+
+
+
+```
+
+
+Calculate the chance of winning by weithing them:
+```{r}
+Pweight <- coef(q4)[2,2]*3+coef(q4)[2,4]*18+coef(q4)[2,5]*15+coef(q4)[2,6]*39+coef(q4)[2,2]*32
+
+Pweight
+```
+
+
+
+
+### Question 5
+If the first goal is scored by the away team, is it advisable to bet in favor of the away team? answer by controlling for all the other variables in the regression model.
+
+**Answer:**
+It is not advisable to bet in favor of the away team if the first goal is scored by the away team. Because the model shows the first goal score is not dependent from the winning  of the team (p>0.05).
+
+### Question 6
+What conclusion can you derive from the classfication tables shown in Exhibit 8? Is it advisable to be on draws?(based on the model developed)?
+
+**Answer:**
+His classification tables shown in Exhibit 8 implies that the model did the best in predicting the loss (79.8%)and also had high accuracy  (78.9%)in predicting the winning., but it did  not perform well in draw(only 25.5%). So it is not advisable to be on draw since it had low correctness of prediction.
+
+### Question 7
+Using the Decision Tree from our R Script, write out several practical rules for betting. Be selective; if there is a tree branch that essentially says “don’t bet at all”, then omit that rule.  
+
+**Answer:**
+
+Based on the tree plot below: 
+1. Betting on lose when HTGD is greater than one and at the same time TOTAL_A_P is greater than 64, you’ll have a probability of greater than 75% to win the bet.
+2. Betting on lose when HTGD is greater than zero but lower than one and at the same time TOTAL_A_P is smaller than 82, you’ll have a probability of greater than 79.5% to win the bet.
+3. Betting on win when HTGD is lower or equal to -2 and at the same time FGS.0 is greater than 0, you’ll have a probability of greater than 89.9% to win the bet
+
+
+```{r echo=FALSE}
+
+library(party)
+              datactree <-ctree(Match_O~HTGD+RED.H+RED.A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+                   df.train, controls=ctree_control(mincriterion=0.9, minsplit=50))
+print(datactree)
+plot(datactree,type="simple")
+```
+
+
+
+### Question 8
+For these, use the R output instead of the Exhibits mentioned in the case.Exibits 10 lists 20 matches played over two weekends in 2012 along with the values of the covariates. Use multinomial logistic regression to predict the match outcome in all 20 cases listed in exhibit 10
+
+**Answer:**
+
+
+```{r}
+df.test$prog2<-relevel(df.test$MATCH_O, ref="Loss")
+Win <- multinom(prog2~HTGD+POINTS_H+POINTS_A+TOTAL_A_P+TOTAL_H_P+FGS.0+FGS.1, data=df.test)
+pred<-predict(Win, df.test) 
+pred
+```
+
+
+
+### Question 9 
+Apply the CHAID decision tree on the 20 matches listed in exhibit 10 and compare the results with your answers obtained using multinomial logistic regression.
+
+**Answer:**
+
+```{r}
+df.test$RED.A <- df.test$RED_A
+df.test$RED.H <- df.test$RED_H 
+datactree2 <- ctree(Match_O~HTGD+RED.H+RED.A+POINTS_H+POINTS_A+TOTAL_H_P+TOTAL_A_P+FGS.0+FGS.1, 
+                   df.train, controls=ctree_control(mincriterion=0.9, minsplit=50))
+pred<-predict(datactree2, df.test) 
+
+```
+
+
+Showing the results of the prediction:
+
+```{r}
+pred
+
+
+```
+
+
+
+### Question 10
+if Peter were to choose one match from the list of 20 matches for betting, which match should he choose? Discuss the reasons for your suggestion.
+
+**Answer:**
+Everton vs. Southampton City (12)
+
+Peter should choose No.12 match(Everton vs. Southampton). Because it has the highest probability of winning. According to the tree, the rout starts from 1 to 24 has the highest probability to win and it was supposed to have positive HTGD, Total_A_P lower than 64 and TOTAL_H_P higher than 0. So any match matches this factors will have the highest probability to win. 12  has 2 HTGD, 0 TOTAL_A_P,  56 total_H_P, which is the best choice.
+
+
+```{r}
+print(datactree2, newdata = df.test)
+plot(datactree2,type="simple")
+```
 
 

@@ -1,15 +1,12 @@
-#---------------------------------------------------------------------------
-#---------------------------------------------------------------------------
-#  New White Wine
-#  Written by Rafael Guimaraes, Yuanxi Yao and Yilan Tang
-#  Date March 20th 2017
-#  Version 1.0
-#  ---------------------------------------------------------------------------
-#  ---------------------------------------------------------------------------
+---
+title: "New White wine"
+author: "Rafael Guimaraes, Yilang Tang and Yuanxi Yao"
+date: "4/4/2017"
+output: html_document
+---
 
-#  ---------------------------------------------------------------------------
-#  Packages
-#  ---------------------------------------------------------------------------
+```{r packages}
+library(fBasics) # Show basic aspect of the data
 library(readr)  # provide additional data-reading functions
 library(corrplot) # attractive correlation graphs
 library(ggplot2) # for plots
@@ -24,55 +21,45 @@ library(e1071)  # for SVM model
 library(nnet)   # for basic neural net
 library(party)
 library(car)
-library(glmnet)
-
+```
 #  ---------------------------------------------------------------------------
 #  Preparing data
 #  ---------------------------------------------------------------------------
 
-# Set location
-setwd("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2")
+
+
 
 # Loading data
-
-
-white_wine <- read_delim("https://raw.githubusercontent.com/rfamg/Big-Data-II-Spring-2017/master/winequality-white.csv", 
-                           ";", escape_double = FALSE, trim_ws = TRUE)
+```{r loading}
 
 
 
-setnames(white_wine, old = c("fixed acidity","volatile acidity", "citric acid", "residual sugar"           
-                            ,"free sulfur dioxide", "total sulfur dioxide"), 
-         new = c("fixed.acidity","volatile.acidity", "citric.acid", "residual.sugar",           
-                 "free.sulfur.dioxide", "total.sulfur.dioxide"))
+white_wine <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/winequality-white.csv")
 
 
-new_white <- read_delim("https://raw.githubusercontent.com/IBSBigData/Big-Data-II-Spring-2017/master/Project%201%20Wine/new_white.csv", 
-                         ",", escape_double = FALSE, trim_ws = TRUE)
-
-setnames(new_white, old = c("fixed acidity","volatile acidity", "citric acid", "residual sugar"           
-                             ,"free sulfur dioxide", "total sulfur dioxide"), 
-         new = c("fixed.acidity","volatile.acidity", "citric.acid", "residual.sugar",           
-                 "free.sulfur.dioxide", "total.sulfur.dioxide"))
+new_white <- read.csv("~/Desktop/Brandes/Analysing Big Data 2/Analysing Big Data 2/data/new_white.csv")
 
 
-View(new_white)
+
+View(white_wine)
 dim(white_wine)
 head(white_wine)
 names(white_wine)
 summary(white_wine)
 str(white_wine)
+```
 
 #  ---------------------------------------------------------------------------
 #  Quality as a factor
 #  ---------------------------------------------------------------------------
-
+```{r qualityfactor}
 white_wine$quality <- as.factor(white_wine$quality)
+```
 
 #  ---------------------------------------------------------------------------
 #  Creating a traing set
 #  ---------------------------------------------------------------------------
-
+```{r training set}
 set.seed(1980)   # initialize the randomm number generator
 
 
@@ -86,119 +73,111 @@ dim(test)
 View(head(train))
 head(test)
 names(train)
-
-#  ---------------------------------------------------------------------------
-#  Using Lasso to select the variables
-#  ---------------------------------------------------------------------------
-
-corrgram(train) # Plot the correlation as a matrix.
-
-x <- as.matrix(train[,-1]) # Removes class
-y <- as.double(as.matrix(train[, 1])) # Only class
-
-# Fitting the model (Lasso: Alpha = 1)
-set.seed(999)
-cv.lasso <- glmnet(x, y, family='gaussian',  alpha=10)
-
-# Results
-plot(cv.lasso, xvar="lambda")
-plot(fit10, main="LASSO")
-plot(cv.lasso$glmnet.fit, xvar="lambda", label=TRUE)
-cv.lasso$lambda.min
-cv.lasso$lambda.1se
-coef(cv.lasso)
-
-
-
-
+```
 #  ---------------------------------------------------------------------------
 #  Create a formula
 #  ---------------------------------------------------------------------------
 
-
-
-form <- as.formula("quality ~  volatile.acidity + chlorides  + total.sulfur.dioxide + density + alcohol")
-
-
-
-corrgram(train) # Plot the correlation as a matrix.
-
+We choose 5 variables that are strongest correlated to the quality, they are alcohol(0.42),density(-0.30), volatile acidity(-0.22), chlorides(-0.21) and total sulfur dioxide(-0.15)
+```{r formula}
+form <- as.formula("quality~volatile.acidity+chlorides+total.sulfur.dioxide+density+alcohol")
+```
 #  ---------------------------------------------------------------------------
-#  Multinomial regression
+#  Model1:Multinomial regression
 #  ---------------------------------------------------------------------------
-
+1.Multinomial regression
+```{r multinomial regression}
 mod <- multinom(form, data=train)
-hist(mod$fitted.values)
 summary(mod$fitted.values)
-
 lgpred <- predict(mod,test)
 table(lgpred)
-
+```
+2.Confusion Matrix
+```{r matrix1}
 tab <- table(lgpred, test$quality)
 print(tab)
-
-
-
-#misclassification rate
-1-sum(diag(tab))/sum(tab)  # this model misclassifies 26.4 % of cases
-
-
+```
+3.misclassification rate
+```{r misrate1}
+1-sum(diag(tab))/sum(tab)  
+```
 #  ---------------------------------------------------------------------------
-#  CART model
+#  Model2:CART model
 #  ---------------------------------------------------------------------------
-
-# Now a CART model
+1.CART Model
+```{r CART}
 tree <- ctree(form, train, 
               controls=ctree_control(mincriterion=0.90, minsplit=10))
 pred_tree <- predict(tree, train)
 table(pred_tree)
+```
+2.Confusion Matrix
+```{r matrix2}
 tab <- table(pred_tree, train$quality)
 print(tab)
-#misclassification rate
+```
+3.misclassification rate
+```{r misrate2}
 1-sum(diag(tab))/sum(tab)
-
+```
 #  ---------------------------------------------------------------------------
-# Linear Discriminant Analysis
+#  Model3:Linear Discriminant Analysis
 #  ---------------------------------------------------------------------------
-
+1.LDA
+```{r LDA}
 fit <- lda(form, data=train,
            na.action="na.omit") 
-
-pred_lda <- predict(fit, train)$class  # use lda model to predict using orig data
-table(pred_lda)  # tabulate the predictions
-
+pred_lda <- predict(fit, train)$class  
+table(pred_lda) 
+```
+2.Confusion Matrix
+```{r Matrix3}
 tab <- table(pred_lda, train$quality)
 print(tab)
-#misclassification rate
+```
+3.misclassification rate
+```{r misrate3}
 1-sum(diag(tab))/sum(tab) 
-
-
+```
 #  ---------------------------------------------------------------------------
-#  SVM - Support Vector Machine
+#  Model4:SVM - Support Vector Machine
 #  ---------------------------------------------------------------------------
-
+1.SVM
+```{r SVM}
 svm1 <- svm(form, data=train)
-
 summary(svm1)
-# now predict
 pred_svm <- fitted(svm1)
 table(pred_svm)
+```
+2.Confusion Matrix
+```{r Matrix4}
 tab <- table(pred_svm, train$quality)
 print(tab)
-#misclassification rate
+```
+3.misclassification rate
+```{r misrate4}
 1-sum(diag(tab))/sum(tab)  
-
+```
 #  ---------------------------------------------------------------------------
-#  Neural Net
+#  Model5: Neural Net
 #  ---------------------------------------------------------------------------
-
-mod_nn <- nnet(form, data = train, size = 15)
+1.Neural Net
+```{r NN}
+mod_nn <- nnet(form, data = train, size = 2)
 pred_nn <- predict(mod_nn, data=train, type = "class")  
 table(pred_nn)
+```
+2.Confusion Matrix
+```{r Matrix5}
 tab <- table(pred_nn, train$quality)
 print(tab)
-#misclassification rate
+```
+3.misclassification rate
+```{r misrate5}
 1-sum(diag(tab))/sum(tab)
-
+```
+-----------------------------------------------------------------------------------
+#Prediction for the 10 new wine
+SVM offers the lowest misclassification rate at 45.22%, now we use this methods to predict for the new wine.
+```{r new wine}
 pred <- predict(svm1,new_white)
-

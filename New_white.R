@@ -99,12 +99,12 @@ form <- as.formula("quality ~ fixed.acidity + volatile.acidity + citric.acid + r
 
 
 #  ---------------------------------------------------------------------------
-#  Logistic regression
+#  Multinomial regression
 #  ---------------------------------------------------------------------------
 
-mod_lg <- multinom(form, data=train)
-hist(mod_lg$fitted.values)
-summary(mod_lg$fitted.values)
+mod <- multinom(form, data=train)
+hist(mod$fitted.values)
+summary(mod$fitted.values)
 
 lgpred <- ifelse(mod_lg$fitted.values > 0.5, 1, 0)
 table(lgpred)

@@ -106,7 +106,7 @@ mod <- multinom(form, data=train)
 hist(mod$fitted.values)
 summary(mod$fitted.values)
 
-lgpred <- ifelse(mod_lg$fitted.values > 0.5, 1, 0)
+lgpred <- ifelse(mod$fitted.values > 0.5, 1, 0)
 table(lgpred)
 
 
